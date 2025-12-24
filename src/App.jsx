@@ -1,15 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import htmlIcon from "./assets/img/htmlicon.jpeg";
 import cssIcon from "./assets/img/cssicon.jpeg";
 import jsIcon from "./assets/img/jsicon.jpeg";
 import accessIcon from "./assets/img/people.jpeg"; 
+import darkIcon from "./assets/img/dark.jpeg"; 
 
 function App() {
+  const [isDark, setIsDark] = useState(false);
   const [ekran, setEkran] = useState("baslangic");
   const [soruNo, setSoruNo] = useState(0);
   const [secim, setSecim] = useState("");
   const [puan, setPuan] = useState(0);
+
+  useEffect(() => {
+    if (isDark) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [isDark]);
 
   const sorular = [
     {
@@ -19,46 +29,39 @@ function App() {
     },
     {
       soru: "ARIA neyin kısaltmasıdır?",
-      secenekler: [
-        "Accessible Rich Internet Applications",
-        "Advanced UI Rendering API",
-        "Adaptive Responsive Interface Access",
-        "Bilmiyorum",
-      ],
+      secenekler: ["Accessible Rich Internet Applications", "Advanced UI Rendering API", "Adaptive Responsive Interface Access", "Bilmiyorum"],
       dogru: "Accessible Rich Internet Applications",
     },
   ];
 
   const basla = () => setEkran("quiz");
+  const tekrarBasla = () => { setEkran("baslangic"); setSoruNo(0); setSecim(""); setPuan(0); };
 
   const cevapSec = (secenek) => {
     setSecim(secenek);
-    if (secenek === sorular[soruNo].dogru) {
-      setPuan(puan + 1);
-    }
-
+    if (secenek === sorular[soruNo].dogru) setPuan(puan + 1);
     setTimeout(() => {
-      if (soruNo + 1 < sorular.length) {
-        setSoruNo(soruNo + 1);
-        setSecim("");
-      } else {
-        setEkran("sonuc");
-      }
+      if (soruNo + 1 < sorular.length) { setSoruNo(soruNo + 1); setSecim(""); } 
+      else { setEkran("sonuc"); }
     }, 800);
-  };
-
-  const tekrarBasla = () => {
-    setEkran("baslangic");
-    setSoruNo(0);
-    setSecim("");
-    setPuan(0);
   };
 
   return (
     <div className="container">
       <div className="header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <strong>Frontend Quiz</strong>
+      
+          <div className="icon-box header-icon">
+            <img src={accessIcon} alt="Accessibility" />
+            <strong><span className="access">Accessibility</span></strong>
+          </div>
+
+        <div className="theme-toggle-container">
+          <img 
+            src={darkIcon} 
+            alt="Toggle Theme" 
+            className="theme-toggle-container" 
+            onClick={() => setIsDark(!isDark)} 
+          />
         </div>
       </div>
 
@@ -66,9 +69,9 @@ function App() {
         {ekran === "baslangic" && (
           <div className="welcome">
             <div className="questions">
-                <span>Welcome to the</span>
-                <strong>Frontend Quiz!</strong>
-                <span>Pick a subject to get started.</span>
+                <span className="welcome-text">Welcome to the</span>
+                <strong className="main-title">Frontend Quiz!</strong>
+                <p>Pick a subject to get started.</p>
             </div>
             <div className="buttons">
               <button className="btn" onClick={basla}><div className="icon-box html-bg"><img src={htmlIcon} alt="HTML" /></div><span>HTML</span></button>
@@ -78,21 +81,16 @@ function App() {
             </div>
           </div>
         )}
+
         {ekran === "quiz" && (
           <div className="quiz-section">
             <div className="questions">
-              <span>Question {soruNo + 1} of {sorular.length}</span>
+              <span className="q-count">Question {soruNo + 1} of {sorular.length}</span>
               <strong>{sorular[soruNo].soru}</strong>
             </div>
-
             <div className="buttons">
               {sorular[soruNo].secenekler.map((secenek, index) => (
-                <button
-                  key={index}
-                  className={`btn ${secim === secenek ? 'selected' : ''}`}
-                  onClick={() => cevapSec(secenek)}
-                  disabled={secim !== ""}
-                >
+                <button key={index} className={`btn ${secim === secenek ? 'selected' : ''}`} onClick={() => cevapSec(secenek)} disabled={secim !== ""}>
                   <div className="letter-box">{String.fromCharCode(65 + index)}</div>
                   <span>{secenek}</span>
                 </button>
@@ -100,7 +98,6 @@ function App() {
             </div>
           </div>
         )}
-
         {ekran === "sonuc" && (
           <div className="welcome">
             <div className="questions">
@@ -109,7 +106,7 @@ function App() {
             </div>
             <div className="buttons">
                 <div className="score-card">
-                    <h1 style={{fontSize: '80px', color: '#313E51'}}>{puan}</h1>
+                    <h1 style={{ fontSize: '80px' }}>{puan}</h1>
                     <p>out of {sorular.length}</p>
                 </div>
                 <button className="submit-btn" onClick={tekrarBasla}>Play Again</button>

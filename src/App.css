@@ -10,6 +10,7 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center; 
+
 }
 
 .container {
@@ -25,6 +26,13 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 60px;
+}
+
+.access{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    padding-left: 14rem;
 }
 
 .main-content {
@@ -134,4 +142,31 @@ body {
         gap: 60px;
         align-items: start;
     }
+}.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.mode-icon-main {
+    width: 40px; 
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.mode-icon-main:hover {
+    transform: scale(1.1);
+}
+
+body.dark-mode {
+    background-color: #313E51 !important;
+    color: white;
+}
+
+.dark-mode .btn {
+    background-color: #000000;
+    color: white;
+    border: none;
 }
